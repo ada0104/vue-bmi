@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>BMI</title>
+        <link rel="stylesheet" href="bmi.css">
+        <!-- font  -->
+        <link rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+            integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+            crossorigin="anonymous">
+        <!-- bootstrap -->
+        <link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+        <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+        <!-- vue -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </head>
+    <body>
+        <div id="vapp" class="container">
+            <div style="background-color: sandybrown">
+                <img src="unnamed.png" alt="">
+                <div class="hw">
+                    <label for="">身高 cm</label><input class="form-control"
+                        type="text" v-model="height">
+                    <label for="">體重 kg</label><input class="form-control"
+                        type="text" v-model="weight">
+                </div>
+                <div class="countbtn">
+                    <button type="button" class="btn btn-warning btn-circle
+                        btn-xl" @click="count()">點我計算</button>
+                </div>
+            </div>
+            <table v-if="isClick" class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">程度</th>
+                        <th scope="col">BMI值</th>
+                        <th scope="col">身高</th>
+                        <th scope="col">體重</th>
+                        <th scope="col">日期</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">{{fat}}</th>
+                        <td> {{BMI}} </td>
+                        <td>{{height}}</td>
+                        <td>{{weight}}</td>
+                        <td>{{date}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <script>
+        var b = new Vue({
+            el:"#vapp",
+            data:{
+                height:'',
+                weight:'',
+                BMI:'',
+                isClick:false,
+                date:'',
+                fat:'',
+                localdata:''
+            },
+            methods:{
+                count:function(){
+                    let vm=this;
+                    var currentDate = new Date();
+                    console.log(currentDate);
+                    var currentDateWithFormat = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+                    console.log(currentDateWithFormat);
+                    this.date=currentDateWithFormat;
+                    this.BMI=Math.ceil(this.weight/(this.height/100*this.height/100));
+                    this.isClick=true;
+                    this.fat=vm.fatval();
+                    console.log(this.fat);
+                    this.localdata=vm.loadset();
+                    this.localdata=vm.loadget();
+                   },
+                fatval:function(){
+                       if(this.BMI<18.5){
+                        return "體重過輕";
+                       }else if(this.BMI<25){
+                        return "體重適中";
+                       }else if(this.BMI<30){
+                        return "體重稍重";
+                       }else if(this.BMI>=30){
+                        return "體重過重";
+                       }
+                   },
+                loadset:function(){
+                    localStorage.setItem("fat",this.fat); 
+                    localStorage.setItem("BMI",this.BMI); 
+                    localStorage.setItem("height",this.height); 
+                    localStorage.setItem("weight",this.weight); 
+                    localStorage.setItem("date",this.date); 
+                    var b=localStorage.valueOf();
+                    console.log(b);
+                },
+                loadget:function(){
+                    localStorage.getItem("fat",this.fat); 
+                    localStorage.getItem("BMI",this.BMI); 
+                    localStorage.getItem("height",this.height); 
+                    localStorage.getItem("weight",this.weight); 
+                    localStorage.getItem("date",this.date); 
+                }  
+            }
+        });
+        </script>
+    </body>
+</html>
